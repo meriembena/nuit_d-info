@@ -1,0 +1,53 @@
+body {
+    background-color: #e0f7fa;
+    font-family: Arial, sans-serif;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: white;
+}
+
+.weather-info {
+    color: white;
+    text-align: center;
+}
+
+.weather-info img {
+    width: 100px;
+    height: 100px;
+}
+
+#map {
+    width: 100%;
+    height: 300px;
+}
+
+.form-control {
+    width: 70%;
+}
+
+.btn {
+    margin-top: 15px;
+}
+
+.sunny-background {
+    background: linear-gradient(to bottom, #ffcc00, #fff9c4);
+}
+
+.cloudy-background {
+    background: linear-gradient(to bottom, #b0c4de, #f0f8ff);
+}
+
+.rainy-background {
+    background: linear-gradient(to bottom, #4a90e2, #b0c4de);
+}
+
+.snowy-background {
+    background: linear-gradient(to bottom, #e0f7fa, #ffffff);
+}

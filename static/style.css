@@ -1,0 +1,60 @@
+/* Boîte de dialogue */
+#alert-box {
+    background-color: #00cccb;
+    padding: 15px;
+    position: fixed;
+    top: 10%;
+    left: 50%;
+    transform: translateX(-50%);  /* Centrer l'alerte horizontalement */
+    width: 80%;  /* Réduire la largeur de l'alerte (tu peux ajuster ce pourcentage) */
+    z-index: 9999;
+    color: black;
+    text-align: left;
+    border: 2px solid #00cccb;
+    border-radius: 10px;
+    display: none;
+}
+
+
+
+/* Animation d'apparition */
+#alert-box.show {
+    display: block;
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+/* Amélioration du titre et des éléments */
+#alert-box h2 {
+    margin-top: 0;
+    font-size: 1.5rem;  /* Réduire la taille du titre */
+}
+
+#alert-box p, #alert-box ul {
+    font-size: 1rem;  /* Réduire la taille des paragraphes */
+}
+
+#alert-box li {
+    font-size: 0.9rem;  /* Réduire la taille des éléments de la liste */
+}
+
+
+#alert-box ul {
+    text-align: left;
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #00cccb;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #00cccb;
+}

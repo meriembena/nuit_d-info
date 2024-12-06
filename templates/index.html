@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Fond dynamique selon le temps */
+        .sunny-background {
+            background: linear-gradient(to bottom, #ffcc00, #fff9c4);
+        }
+        .cloudy-background {
+            background: linear-gradient(to bottom, #b0c4de, #f0f8ff);
+        }
+        .rainy-background {
+            background: linear-gradient(to bottom, #4a90e2, #b0c4de);
+        }
+        .snowy-background {
+            background: linear-gradient(to bottom, #e0f7fa, #ffffff);
+        }
+
+        /* Illustration météo */
+        .weather-icon {
+            width: 150px;
+            margin-top: 20px;
+        }
+
+        .weather-info {
+            text-align: center;
+            font-size: 1.2rem;
+            z-index: 10;
+            position: relative;
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #e0f7fa;
+            max-width: 30%;
+            margin: 0 auto;
+        }
+
+        .form-control {
+            width: 50%;
+        }
+
+        /* Animation GIF en plein écran */
+        .weather-gif {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        /* Alerte en bannière */
+        #alert-box {
+    background-color: #00cccb;
+    padding: 5px;  /* Réduire le padding */
+    position: fixed;
+    top: 50%;  /* Centrer verticalement */
+    left: 50%;  /* Centrer horizontalement */
+    width: 30%;  /* Réduire la largeur de l'alerte */
+    z-index: 9999;
+    color: black;
+    text-align: left;
+    border: 2px solid #00cccb;
+    border-radius: 10px;
+    display: none;
+    transform: translate(-50%, -50%);  /* Ajuster l'élément pour le centrer parfaitement */
+}
+
+
+        #alert-box h2 {
+            margin-top: 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #00cccb;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #00cccb;
+        }
+
+        /* Style de la vidéo */
+        .alert-video {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+    </style>
+    <title>Météo Océane</title>
+</head>
+<body class="{{ background_class }}" {% if is_second_interface %}data-second-interface="true"{% endif %}>
+
+    <!-- Affichage du GIF météo -->
+    <img class="weather-gif" src="{{ url_for('static', filename='gifs/' + weather_gif) }}" alt="GIF météo">
+
+    <div class="container mt-5">
+        <h1 class="text-center {% if is_first_interface %}text-white{% else %}text-dark{% endif %}">
+            Quelle tête fait le ciel aujourd'hui ? 🌥️
+        </h1>
+        <form method="POST" class="mt-4 d-flex justify-content-center">
+            <input type="text" class="form-control" id="city" name="city" placeholder="Entrez une ville" required>
+            <button type="submit" class="btn btn-primary ms-3">Vérifier</button>
+        </form>
+
+        <!-- Affichage du bouton pour accéder aux prévisions -->
+        {% if weather %}
+        <div class="weather-info mt-4">
+            <h2>Météo à {{ weather['name'] }}</h2>
+            <img class="weather-icon" src="http://openweathermap.org/img/wn/{{ weather['weather'][0]['icon'] }}@2x.png" alt="Icône météo">
+            <p><strong>Description :</strong> {{ weather['weather'][0]['description'] }}</p>
+            <p><strong>Température :</strong> {{ weather['main']['temp'] }}°C</p>
+            <p><strong>Humidité :</strong> {{ weather['main']['humidity'] }}%</p>
+            <p><strong>Vent :</strong> {{ weather['wind']['speed'] }} m/s</p>
+
+            <!-- Audio météo -->
+            <audio autoplay>
+                <source src="{{ url_for('static', filename='audio/' + weather_audio) }}" type="audio/mpeg">
+                Votre navigateur ne supporte pas l'élément audio.
+            </audio>
+
+            <!-- Bouton pour accéder aux prévisions -->
+            <form method="POST" action="/forecast">
+                <input type="hidden" name="city" value="{{ weather['name'] }}">
+                <button type="submit" class="btn btn-secondary mt-4">Voir les prévisions</button>
+            </form>
+        </div>
+        {% endif %}
+
+    </div>
+
+    <!-- Alerte en bannière pour la variation des températures -->
+    <div id="alert-box">
+        <h2>😡 Alerte !</h2>
+        <p><strong>Les variations de température sont en grande partie causées par l'activité humaine, en particulier :</strong></p>
+        <ul>
+            <li>L'émission de gaz à effet de serre comme le CO₂.</li>
+            <li>Les déforestations massives.</li>
+            <li>Les changements d'utilisation des sols et de l'agriculture.</li>
+        </ul>
+        <p><strong>Protéger l'environnement est crucial !</strong></p>
+        
+        <!-- Vidéo des dangers -->
+        <video class="alert-video" controls>
+            <source src="{{ url_for('static', filename='audio/dangers.mp4') }}" type="video/mp4">
+            Votre navigateur ne supporte pas la balise vidéo.
+        </video>
+        
+
+        <button onclick="closeAlertBox()">Fermer</button>
+    </div>
+
+<script>
+    // Vérifier si l'interface est la deuxième pour montrer l'alerte
+    window.onload = function() {
+        if (document.body.getAttribute('data-second-interface') === 'true') {
+            setTimeout(function() {
+                showAlertBox();
+            }, 1000); // Afficher après 1 seconde
+        }
+    }
+
+    function showAlertBox() {
+        document.getElementById("alert-box").style.display = "block"; // Assurez-vous qu'il est visible
+    }
+
+    function closeAlertBox() {
+        document.getElementById("alert-box").style.display = "none"; // Fermer l'alerte
+    }
+</script>
+
+</body>
+</html>
